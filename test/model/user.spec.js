@@ -29,14 +29,14 @@ describe('User model', () => {
       });
     });
 
-    it('should have a email field', () => {
+    it('should have an email field', () => {
       expect(testUser.email).to.be.a('string');
       expect(testUser.email).to.equal('mike@mikey.michael');
     });
   });
 
   describe('validations', () => {
-    it('Requires a email field', () => {
+    it('Requires an email field', () => {
       const user = User.build({
         password: 'password'
       });
@@ -65,6 +65,28 @@ describe('User model', () => {
   });
 
   describe('instanceMethods', () => {
+
+    describe('saveQuery', () => {
+      beforeEach(() => {
+        let mike;
+        return User.create({
+          email: 'mike@test.com',
+          password: 'pikachu'
+        })
+          .then(user => mike = user);
+      })
+
+      it('returns a promise that creates a query record that is associated to this user', () => {
+        const gymQuery = 'Rock Gym, Kanto Region, 12345'
+        mike.saveQuery(gymQuery)
+          .then(() => mike.getQueries())
+          .then(queries => {
+            expect(queries).to.be.an('array');
+            expect(queries).to.have.a.lengthOf(1);
+            expect(queries[0]).to.equal(gymQuery);
+          });
+      });
+    });
 
     describe('correctPassword', () => {
 
