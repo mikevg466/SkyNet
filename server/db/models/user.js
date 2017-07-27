@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const Sequelize = require('sequelize');
 const db = require('../db');
+const Query = require('./query');
 
 const setSaltAndPassword = user => {
   if (user.changed('password')) {
@@ -43,6 +44,13 @@ const User = db.define('user', {
   instanceMethods: {
     correctPassword (candidatePwd) {
       return this.Model.encryptPassword(candidatePwd, this.salt) === this.password;
+    },
+    saveQuery(address){
+      return Query.create({
+        address: address
+      })
+        .then(query => this.addQuery(query))
+        .catch(console.error.bind(console));
     }
   },
   classMethods: {
