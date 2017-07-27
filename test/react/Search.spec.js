@@ -3,15 +3,15 @@ import chai, {expect} from 'chai';
 import spies from 'chai-spies';
 import {shallow} from 'enzyme';
 import {spy} from 'sinon';
-import { Search } from '../../client/components/Search';
+import { Search } from '../../client/containers/Search';
 
 const testUser = {
   email: 'mike@test.com',
 }
 
-describe('Search component', () => {
+describe('Search container', () => {
   let SearchComponent;
-  beforeEach('Create component', () => {
+  beforeEach('Create container', () => {
     SearchComponent = shallow(
       <Search
         user={testUser}
@@ -26,4 +26,4 @@ describe('Search component', () => {
     expect(SearchComponent.find('button').length).to.equal(2);
   });
 
-}); // end describe ('Search component');
+}); // end describe ('Search container');

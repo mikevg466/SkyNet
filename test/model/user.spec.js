@@ -77,13 +77,13 @@ describe('User model', () => {
       })
 
       it('returns a promise that creates a query record that is associated to this user', () => {
-        const gymQuery = 'Rock Gym, Kanto Region, 12345'
-        mike.saveQuery(gymQuery)
+        const gymAddress = 'Rock Gym, Kanto Region, 12345'
+        mike.saveQuery(gymAddress)
           .then(() => mike.getQueries())
           .then(queries => {
             expect(queries).to.be.an('array');
             expect(queries).to.have.a.lengthOf(1);
-            expect(queries[0]).to.equal(gymQuery);
+            expect(queries[0].address).to.equal(gymAddress);
           });
       });
     });

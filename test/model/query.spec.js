@@ -32,10 +32,6 @@ describe('Query model', () => {
       expect(testQuery.address).to.be.a('string');
       expect(testQuery.address).to.equal('king\'s landing, Westeros');
     });
-    it('should have a userId field', () => {
-      expect(testQuery.userId).to.be.a('number');
-      expect(testQuery.userId).to.equal('0');
-    });
   }); // end describe('field definitions')
 
   describe('validations', () => {
