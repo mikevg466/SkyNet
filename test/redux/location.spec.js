@@ -4,6 +4,12 @@ import { createStore, applyMiddleware } from 'redux';
 import combineReducer from '../../client/redux';
 import thunkMiddleware from 'redux-thunk';
 
+const testLocation = {
+  address: 'Westeros',
+  latitude: '31.12',
+  longitude: '-123.34'
+}
+
 describe('Location Reducer', () => {
   let testStore;
   beforeEach('Create testing store', () => {
@@ -13,25 +19,39 @@ describe('Location Reducer', () => {
   it('has expected initial state', () => {
     expect(testStore.getState().location).to.be.deep.equal({
       address: '',
-      latitude: [],
-      longitude: []
+      latitude: '',
+      longitude: ''
     });
   });
 
+  /* For AJAX calls to Google APIs:
+    For Search Bar:
+      use Geo Coding when passed address in search bar
+          https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
 
 
-  describe('Google Maps AJAX requests', () => {
-    describe('Geo Location', () => {
-      xit('makes calls to the google Geo Location server', () => {});
-      xit('uses the secret api key in the call', () => {});
-      xit('pulls the latitude for based on cell tower info', () => {});
-      xit('pulls the longitude for based on cell tower info', () => {});
-    }); // end describe('Geo Location')
-    describe('Geo Coding', () => {
-      xit('makes calls to the google Geo Coding server', () => {});
-      xit('uses the secret api key in the call', () => {});
-      xit('pulls the latitude for a given address', () => {});
-      xit('pulls the longitude for a given address', () => {});
-    }); // end describe('Geo Coding')
-  }); // end describe('Google Maps AJAX requests')
+    For Geo Location Finder:
+      user Geo Location API to get latitude and longitude for current location
+          https://www.googleapis.com/geolocation/v1/geolocate?key=YOUR_API_KEY
+      Then use Reverse Geo Coding when using latitude and longitude for location finder
+          https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
+
+
+    both should then set store with address, latitude, and longitude from resulting information
+  */
+  describe('SET_LOCATION', () => {
+    it('sets the address, latitude, and longitude based on the input', () => {
+      testStore.dispatch({
+        type: 'SET_LOCATION',
+        address: testLocation.address,
+        latitude: testLocation.latitude,
+        longitude: testLocation.longitude,
+      });
+      const newState = testStore.getState().location;
+      Object.keys(testLocation).forEach(key => {
+        expect(newState[key]).to.equal(testLocation[key])
+      })
+    });
+  }); // end describe('SET_LOCATION')
+
 }); // end describe('Location Reducer')
