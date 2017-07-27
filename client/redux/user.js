@@ -6,7 +6,6 @@ const GET_USER = 'GET_USER';
 const REMOVE_USER = 'REMOVE_USER';
 
 // ------ ACTION CREATORS -------
-
 const getUser = user => ({ type: GET_USER, user });
 const removeUser = () => ({ type: REMOVE_USER });
 
