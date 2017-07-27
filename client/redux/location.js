@@ -1,15 +1,17 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
+import { GOOGLE_GEOLOCATION_SECRET, GOOGLE_GEOCODING_SECRET } from '../secrets';
 
 //------- ACTIONS -------
 const SET_LOCATION = 'SET_LOCATION';
 
 // ------ ACTION CREATORS -------
-const setLocation = (address, latitude, longitude) => {
+const setLocation = (address, latitude, longitude) => ({
   type: SET_LOCATION,
+  address,
   latitude,
   longitude
-};
+});
 
 // ------- INIT STATE --------
 const initState = {
@@ -40,11 +42,11 @@ export default function (state = initState, action) {
 // -------- DISPATCHERS -----------
 export const getCurrentLocation = () =>
   dispatch =>
-    axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${ process.env.GOOGLE_GEOLOCATION_SECRET }`, {considerIp: "true"})
+    axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${ GOOGLE_GEOLOCATION_SECRET }`, {considerIp: "true"})
       .then(res => res.data)
       .then(data => {
         const { lat, lng } = data.location;
-        return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${ lat },${ lng }&key=${ process.env.GOOGLE_GEOCODING_SECRET }`);
+        return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${ lat },${ lng }&key=${ GOOGLE_GEOCODING_SECRET }`);
       })
       .then(res => res.data)
       .then(data => {
@@ -56,8 +58,10 @@ export const getCurrentLocation = () =>
 
 export const getCoordinates = address =>
   dispatch =>
-    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${ address }&key=${ process.env.GOOGLE_GEOCODING_SECRET }`)
-      .then(res => res.data)
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${ address }&key=${ GOOGLE_GEOCODING_SECRET }`)
+      .then(res => {
+        return res.data
+      })
       .then(data => {
         const { formatted_address, geometry } = data.results[0];
         const { lat, lng } = geometry.location;

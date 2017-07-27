@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { getCurrentLocation, getCoordinates } from '../redux/location';
 
 export class Search extends React.Component{
 
@@ -11,6 +12,7 @@ export class Search extends React.Component{
     };
     this.searchChange = this.searchChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.locationFinder = this.locationFinder.bind(this);
   }
 
   searchChange(e){
@@ -19,17 +21,24 @@ export class Search extends React.Component{
     });
   }
 
-  handleSubmit(e, address){
-    // TODO: call google API's using address to pull location data
+  locationFinder(e){
+    e.preventDefault();
+    this.props.handleGetLocation();
+  }
+
+  handleSubmit(e){
+    e.preventDefault();
+    this.props.handleGetCoordinates(this.state.address);
     // TODO: then call darksky API's to pull weather info
-    console.log('address submitted', address);
+    // TODO: save query to database
+    console.log('address submitted', this.state.address);
   }
 
   render(){
     const user = this.props.user;
     return (
       <div>
-      <form onSubmit={(e) => { this.handleSubmit(e, this.state.address) }}>
+      <form onSubmit={this.handleSubmit}>
         <div className="form-group row">
           <div className="col-md-12 col-xs-12">
             <label className="col-xs-2 control-label">Search</label>
@@ -47,8 +56,11 @@ export class Search extends React.Component{
             <pre>{'Search above!'}</pre> :
             null // TODO: Add D3 tables here once weather information is being retrieved. Make separate component for this
         }
-        <button type="button" className="btn btn-info">
-          Find Me
+        <button
+          type="button"
+          className="btn btn-info"
+          onClick={this.locationFinder}>
+            Find Me
         </button>
         <button type="submit" className="btn btn-success">
           Search!
@@ -63,4 +75,9 @@ const mapState = ({ user }) => ({
   user,
 });
 
-export default connect(mapState)(Search);
+const mapDispatch = dispatch => ({
+  handleGetCoordinates: address => dispatch(getCoordinates(address)),
+  handleGetLocation: () => dispatch(getCurrentLocation()),
+});
+
+export default connect(mapState, mapDispatch)(Search);

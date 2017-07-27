@@ -6,12 +6,12 @@ const SET_FORECAST = 'SET_FORECAST';
 const SET_HISTORIC = 'SET_HISTORIC';
 
 // ------ ACTION CREATORS -------
-const setForecast = (current, forecast) => {
+const setForecast = (current, forecast) => ({
   type: SET_FORECAST,
   current,
   forecast
-};
-const setHistoric = historic => { type: SET_HISTORIC, historic };
+});
+const setHistoric = historic => ({ type: SET_HISTORIC, historic });
 
 // ------- INIT STATE --------
 const initState = {
