@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentLocation, getCoordinates } from '../redux/location';
+import { getForecast, getHistoricDay } from '../redux/weather';
 
 export class Search extends React.Component{
 
@@ -23,15 +24,27 @@ export class Search extends React.Component{
 
   locationFinder(e){
     e.preventDefault();
-    this.props.handleGetLocation();
+    this.props.handleGetLocation()
+      .then(() => {
+        const { latitude, longitude } = this.props.location;
+        return this.props.handleGetForecast(latitude, longitude);
+      })
+      .catch(console.error.bind(console));
   }
 
   handleSubmit(e){
     e.preventDefault();
-    this.props.handleGetCoordinates(this.state.address);
+    this.props.handleGetCoordinates(this.state.address)
+      .then(() => {
+        const { latitude, longitude } = this.props.location;
+        return this.props.handleGetForecast(latitude, longitude);
+      })
+      .catch(console.error.bind(console));
     // TODO: then call darksky API's to pull weather info
+      // forecast
+      // historic
+
     // TODO: save query to database
-    console.log('address submitted', this.state.address);
   }
 
   render(){
@@ -71,13 +84,16 @@ export class Search extends React.Component{
   }
 };
 
-const mapState = ({ user }) => ({
+const mapState = ({ user, location }) => ({
   user,
+  location,
 });
 
 const mapDispatch = dispatch => ({
   handleGetCoordinates: address => dispatch(getCoordinates(address)),
   handleGetLocation: () => dispatch(getCurrentLocation()),
+  handleGetForecast: (lat, lng) => dispatch(getForecast(lat, lng)),
+  handleGetHistoricDay: (lat, lng, time) => getHistoricDay(lat, lng, time),
 });
 
 export default connect(mapState, mapDispatch)(Search);

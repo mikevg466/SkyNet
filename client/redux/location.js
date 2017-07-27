@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
-import { GOOGLE_GEOLOCATION_SECRET, GOOGLE_GEOCODING_SECRET } from '../secrets';
 
 //------- ACTIONS -------
 const SET_LOCATION = 'SET_LOCATION';
@@ -52,7 +51,7 @@ export const getCurrentLocation = () =>
       .then(data => {
         const { formatted_address, geometry } = data.results[0];
         const { lat, lng } = geometry.location;
-        dispatch(setLocation(formatted_address, lat, lng));
+        return dispatch(setLocation(formatted_address, lat, lng));
       })
       .catch(console.error.bind(console));
 
@@ -65,6 +64,6 @@ export const getCoordinates = address =>
       .then(data => {
         const { formatted_address, geometry } = data.results[0];
         const { lat, lng } = geometry.location;
-        dispatch(setLocation(formatted_address, lat, lng));
+        return dispatch(setLocation(formatted_address, lat, lng));
       })
       .catch(console.error.bind(console));
