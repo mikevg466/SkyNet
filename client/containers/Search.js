@@ -6,7 +6,8 @@ export class Search extends React.Component{
   constructor(){
     super();
     this.state = {
-      address: ''
+      address: '',
+      weatherData: []
     };
     this.searchChange = this.searchChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,24 +29,27 @@ export class Search extends React.Component{
     const user = this.props.user;
     return (
       <div>
-      <form onSubmit={(e) => { handleSubmit(e, this.state.address) }}>
+      <form onSubmit={(e) => { this.handleSubmit(e, this.state.address) }}>
         <div className="form-group row">
           <div className="col-md-12 col-xs-12">
             <label className="col-xs-2 control-label">Search</label>
             <input
               className="form-control"
               type="text"
-              value={address}
+              value={this.state.address}
               placeholder="Enter search query"
-              onChange={searchChange}
+              onChange={this.searchChange}
             />
           </div>
         </div>
         {
-          !resultList.length ?
+          !this.state.weatherData.length ?
             <pre>{'Search above!'}</pre> :
             null // TODO: Add D3 tables here once weather information is being retrieved. Make separate component for this
         }
+        <button type="button" className="btn btn-info">
+          Find Me
+        </button>
         <button type="submit" className="btn btn-success">
           Search!
         </button>

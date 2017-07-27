@@ -5,7 +5,7 @@ chai.use(chaiProperties);
 chai.use(chaiThings);
 const expect = chai.expect;
 const db = require('../../server/db');
-const Query = db.model('query');
+const Query = require('../../server/db/models/query');
 
 describe('Query model', () => {
 

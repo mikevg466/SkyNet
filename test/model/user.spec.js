@@ -4,8 +4,9 @@ const chaiThings = require('chai-things');
 chai.use(chaiProperties);
 chai.use(chaiThings);
 const expect = chai.expect;
+const models = require('../../server/db/models');
 const db = require('../../server/db');
-const User = db.model('user');
+const User = require('../../server/db/models/user');
 
 describe('User model', () => {
 
@@ -65,10 +66,9 @@ describe('User model', () => {
   });
 
   describe('instanceMethods', () => {
-
+    let mike;
     describe('saveQuery', () => {
       beforeEach(() => {
-        let mike;
         return User.create({
           email: 'mike@test.com',
           password: 'pikachu'
@@ -78,7 +78,7 @@ describe('User model', () => {
 
       it('returns a promise that creates a query record that is associated to this user', () => {
         const gymAddress = 'Rock Gym, Kanto Region, 12345'
-        mike.saveQuery(gymAddress)
+        return mike.saveQuery(gymAddress)
           .then(() => mike.getQueries())
           .then(queries => {
             expect(queries).to.be.an('array');

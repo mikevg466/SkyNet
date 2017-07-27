@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
 
-const User = db.define('user', {
+const Query = db.define('query', {
   address: {
     type: Sequelize.STRING,
     allowNull: false
   }
 });
 
-module.exports = User;
+module.exports = Query;
