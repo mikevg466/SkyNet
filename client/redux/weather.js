@@ -53,7 +53,7 @@ export default function (state = initState, action) {
 // -------- DISPATCHERS -----------
 export const getForecast = (lat, lng) =>
   dispatch =>
-    axios.post(`/api/proxy/forecast`, { lat, lng })
+    axios.post(`/api/proxy/weather/forecast`, { lat, lng })
       .then(res => res.data)
       .then(data => {
         const { currently, daily } = data;
