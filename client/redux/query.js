@@ -41,15 +41,15 @@ export const saveQuery = () =>
     const curStore = getStore();
     const user = curStore.user;
     const address = curStore.location.address;
-    return axios.post(`/api/user/query/${ user.id }`, { address })
+    return axios.post(`/api/users/query/${ user.id }`, { address })
       .then(() => dispatch(addHistory(address)))
       .catch(console.error.bind(console));
   }
 
 export const getQueries = () =>
-  dispatch => {
+  (dispatch, getStore) => {
     const user = getStore().user;
-    return axios.get(`/api/user/query/${ user.id }`)
+    return axios.get(`/api/users/query/${ user.id }`)
       .then(res => res.data)
       .then(queries => {
         queries.sort((a,b) => b.id - a.id);

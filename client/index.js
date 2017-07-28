@@ -5,9 +5,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, IndexRoute, IndexRedirect } from 'react-router';
 import store from './store';
-import { Main, Login, Signup, UserHome, LoginHome  } from './components';
-import { me } from './redux/user';
-import { fetchUser } from './redux/user';
+import { Main, Login, Signup, UserHome, LoginHome, History  } from './components';
+import { me, fetchUser } from './redux/user';
+import { getQueries } from './redux/query';
 
 
 const whoAmI = store.dispatch(me());
@@ -28,6 +28,7 @@ const requireLogin = (nextRouterState, replace, next) =>
     .then(() => next())
     .catch(console.error.bind(console));
 
+const loadHistory = () => store.dispatch(getQueries());
 
 ReactDOM.render(
   <Provider store={store}>
@@ -36,6 +37,7 @@ ReactDOM.render(
         <IndexRoute component={Main} />
           <Route onEnter={requireLogin}>
             <Route path="home" component={UserHome} />
+            <Route path="history" onEnter={loadHistory} component={History} />
           </Route>
           <Route path="loginHome" component={ LoginHome } />
           <Route path="login" component={Login} />

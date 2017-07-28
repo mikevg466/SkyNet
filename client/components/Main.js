@@ -20,7 +20,11 @@ const Main = (props) => {
                     SkyNet
                 </Link>
                 <Link className="navbar-brand" to="loginHome">
-                Signup/Login</Link>
+                  Signup/Login
+                </Link>
+                <Link className="navbar-brand" to="history">
+                  Past Searches
+                </Link>
                 <ul className="nav navbar-nav" />
               </div>
             </div>
