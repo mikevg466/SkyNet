@@ -18,12 +18,14 @@ class BarChart extends React.Component {
   }
   createBarChart() {
     const node = this.node;
-    const dataMax = max(this.props.data);
+    const dataArr = this.props.data.map(el => el.data);
+    const labelArr = this.props.data.map(el => el.label);
+    const dataMax = max(dataArr);
 
     const outerWidth = this.props.size[0];
     const outerHeight = this.props.size[1];
     const xAxisLabelText = "Temperature";
-    const xAxisLabelOffset = 55;
+    // const xAxisLabelOffset = 55;
     const margin = { left: 0, top: 0, right: 0, bottom: 60 };
     const barPadding = 0.2;
     const innerWidth  = outerWidth  - margin.left - margin.right;
@@ -32,7 +34,7 @@ class BarChart extends React.Component {
     var xScale = d3.scaleLinear().range(      [0, innerWidth]);
     var yScale = d3.scaleBand().range([0, innerHeight]).padding(barPadding);
 
-    var xAxis = d3.axisBottom(xScale).tickFormat(function(d){ return d;});
+    var xAxis = d3.axisBottom(xScale);
     var yAxis = d3.axisLeft(yScale);
 
     var g = select(node).append("g")
@@ -43,14 +45,14 @@ class BarChart extends React.Component {
     var xAxisLabel = xAxisG.append("text")
      .style("text-anchor", "middle")
      .attr("x", innerWidth / 2)
-     .attr("y", xAxisLabelOffset)
+     .attr("y", innerHeight / 2)
      .attr("class", "label")
      .text(xAxisLabelText);
     var yAxisG = g.append("g")
      .attr("class", "y axis");
 
      xScale.domain([0, dataMax]);
-     yScale.domain(this.props.data.map( function (d){ return d; }));
+     yScale.domain(labelArr);
 
      xAxisG.call(xAxis);
      yAxisG.call(yAxis);
@@ -73,9 +75,9 @@ class BarChart extends React.Component {
       .data(this.props.data)
       .style('fill', '#fe9922')
       .attr("x", 0)
-      .attr("y",     function (d){ return yScale(d); })
+      .attr("y",     function (d){return yScale(d.label); })
       .attr("height", yScale.bandwidth())
-      .attr("width", function (d){ return xScale(d); });
+      .attr("width", function (d){return xScale(d.data); });
     }
     render() {
       return <svg ref={node => this.node = node}

@@ -6,6 +6,8 @@ import { saveQuery } from '../redux/query';
 import CurrentForecast from '../components/CurrentForecast';
 import DayForecast from '../components/DayForecast';
 import BarChart from '../components/BarChart.js';
+import Promise from 'bluebird';
+import Month from '../utils/Month';
 
 export class Search extends React.Component{
 
@@ -17,12 +19,40 @@ export class Search extends React.Component{
     this.searchChange = this.searchChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.locationFinder = this.locationFinder.bind(this);
+    this.mapData = this.mapData.bind(this);
   }
 
   searchChange(e){
     this.setState({
       address: e.target.value
     });
+  }
+
+  getHistoricDates(){
+    const historicDates = [];
+    for(let i = 1; i <= 5; i++){
+      const curDate = new Date();
+      curDate.setDate(curDate.getDate() - i);
+      historicDates.push(Math.round(curDate.getTime() / 1000));
+    }
+    return historicDates;
+  }
+
+  getHistoricLabels(){
+    const historicDates = this.getHistoricDates();
+    return historicDates
+      .map(utc => new Date(utc * 1000))
+      .map(date => `${ Month[date.getMonth()] } ${ date.getDate() }`);
+  }
+
+  mapData(){
+    const labels = this.getHistoricLabels();
+    const data = this.props.weather.historic
+      .map(forecast => forecast.temperatureMax);
+    return labels.map((label, idx) => ({
+      label,
+      data: data[idx]
+    }));
   }
 
   locationFinder(e){
@@ -38,10 +68,19 @@ export class Search extends React.Component{
 
   handleSubmit(e){
     e.preventDefault();
+    const historicDates = this.getHistoricDates();
+    console.log('hsitoricDates', historicDates);
     this.props.handleGetCoordinates(this.state.address)
       .then(() => {
         const { latitude, longitude } = this.props.location;
         return this.props.handleGetForecast(latitude, longitude);
+      })
+      .then(() => {
+        const { latitude, longitude } = this.props.location;
+        return Promise.each(
+          historicDates,
+          (time) => this.props.handleGetHistoricDay(latitude, longitude, time)
+        )
       })
       .then(() => this.props.handleSaveQuery())
       .catch(console.error.bind(console));
@@ -71,7 +110,7 @@ export class Search extends React.Component{
               </div>
             </div>
             {
-              !this.props.weather.forecast.length ?
+              !this.props.weather.historic.length ?
                 <pre>{'Search above!'}</pre> :
                 <div>
                   <div className="row">
@@ -98,8 +137,7 @@ export class Search extends React.Component{
                   <div className="row">
                     <h2>Max Temperature/Day for past 5 days</h2>
                     {
-                      <BarChart data={this.props.weather.forecast
-                        .map(forecast => forecast.temperatureMax)} size={[500,500]} />
+                      <BarChart data={this.mapData()} size={[500,500]} />
                     }
                   </div>
                 </div>

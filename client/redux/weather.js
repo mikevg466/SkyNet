@@ -64,7 +64,7 @@ export const getForecast = (lat, lng) =>
 
 export const getHistoricDay = (lat, lng, time) =>
   dispatch =>
-    axios.get(`https://api.darksky.net/forecast/${ DARK_SKY_SECRET }/${ lat },${ lng },${ time }`)
+    axios.post(`/api/proxy/weather/historic`, { lat, lng, time })
       .then(res => res.data)
       .then(data => {
         const historicDay = data.daily.data[0];
