@@ -2,14 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentLocation, getCoordinates } from '../redux/location';
 import { getForecast, getHistoricDay } from '../redux/weather';
+import CurrentForecast from '../components/CurrentForecast';
+import DayForecast from '../components/DayForecast';
 
 export class Search extends React.Component{
 
   constructor(){
     super();
     this.state = {
-      address: '',
-      weatherData: []
+      address: ''
     };
     this.searchChange = this.searchChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -51,42 +52,72 @@ export class Search extends React.Component{
     const user = this.props.user;
     return (
       <div>
-      <form onSubmit={this.handleSubmit}>
-        <div className="form-group row">
-          <div className="col-md-12 col-xs-12">
-            <label className="col-xs-2 control-label">Search</label>
-            <input
-              className="form-control"
-              type="text"
-              value={this.state.address}
-              placeholder="Enter search query"
-              onChange={this.searchChange}
-            />
+        <form onSubmit={this.handleSubmit}>
+          <div className="container">
+            <div className="row ">
+              <div className="form-group row">
+                <div className="col-md-12 col-xs-12">
+                  <label className="col-xs-2 control-label">Search</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={this.state.address}
+                    placeholder="Enter search query"
+                    onChange={this.searchChange}
+                  />
+                </div>
+              </div>
+            </div>
+            {
+              !this.props.weather.forecast.length ?
+                <pre>{'Search above!'}</pre> :
+                <div>
+                  <div className="row">
+                    <h2>Weather for {this.props.location.address}</h2>
+                  </div>
+                  <div className="row ">
+                    <CurrentForecast
+                      forecast={this.props.weather.current}
+                    />
+                  </div>
+                  <div className="row ">
+                    {
+                      this.props.weather.forecast
+                        .slice(0,5)
+                        .map(forecast => (
+                          <div key={forecast.time} className="col-md-2">
+                            <DayForecast
+                              forecast={forecast}
+                            />
+                          </div>
+                        ))
+                    }
+                  </div>
+                </div>
+                // TODO: Add D3 tables here once weather information is being retrieved. Make separate component for this
+            }
+            <div className="row ">
+              <button
+                type="button"
+                className="btn btn-info"
+                onClick={this.locationFinder}>
+                  Find Me
+              </button>
+              <button type="submit" className="btn btn-success">
+                Search!
+              </button>
+            </div>
           </div>
-        </div>
-        {
-          !this.state.weatherData.length ?
-            <pre>{'Search above!'}</pre> :
-            null // TODO: Add D3 tables here once weather information is being retrieved. Make separate component for this
-        }
-        <button
-          type="button"
-          className="btn btn-info"
-          onClick={this.locationFinder}>
-            Find Me
-        </button>
-        <button type="submit" className="btn btn-success">
-          Search!
-        </button>
-      </form>
+        </form>
       </div>
     );
   }
 };
 
-const mapState = ({ user, location }) => ({
+const mapState = ({ user, location, weather }) => ({
   user,
   location,
+  weather,
 });
 
 const mapDispatch = dispatch => ({

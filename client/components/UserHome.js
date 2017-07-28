@@ -8,7 +8,6 @@ export const UserHome = props => {
 
   return (
     <div className="container-fluid">
-      <h3>Welcome, { email }</h3>
       <Search />
     </div>
   );
