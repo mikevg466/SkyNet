@@ -57,10 +57,18 @@ export class Search extends React.Component{
 
   locationFinder(e){
     e.preventDefault();
+    const historicDates = this.getHistoricDates();
     this.props.handleGetLocation()
       .then(() => {
         const { latitude, longitude } = this.props.location;
         return this.props.handleGetForecast(latitude, longitude);
+      })
+      .then(() => {
+        const { latitude, longitude } = this.props.location;
+        return Promise.each(
+          historicDates,
+          (time) => this.props.handleGetHistoricDay(latitude, longitude, time)
+        )
       })
       .then(() => this.props.handleSaveQuery())
       .catch(console.error.bind(console));
@@ -69,7 +77,6 @@ export class Search extends React.Component{
   handleSubmit(e){
     e.preventDefault();
     const historicDates = this.getHistoricDates();
-    console.log('hsitoricDates', historicDates);
     this.props.handleGetCoordinates(this.state.address)
       .then(() => {
         const { latitude, longitude } = this.props.location;
