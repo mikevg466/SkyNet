@@ -66,3 +66,17 @@ router.get('/name/:userId', (req, res, next) => {
 router.get('/email/:userId', (req, res, next) => {
   res.status(200).json(req.user.email);
 });
+
+
+/****-----   Add Query    -----*****/
+router.post('/query/:userId', (req, res, next) => {
+  req.user.saveQuery(req.body.address)
+    .then(() => res.status(200).send('Query Saved'))
+    .catch(next);
+});
+
+router.get('/query/:userId', (req, res, next) => {
+  req.user.getQueries()
+    .then(queries => res.status(200).json(queries))
+    .catch(next);
+});
