@@ -84,9 +84,6 @@ export class Search extends React.Component{
       })
       .then(() => this.props.handleSaveQuery())
       .catch(console.error.bind(console));
-    // TODO: then call darksky API's to pull weather info
-      // forecast
-      // historic
   }
 
   render(){
