@@ -5,6 +5,7 @@ import { getForecast, getHistoricDay } from '../redux/weather';
 import { saveQuery } from '../redux/query';
 import CurrentForecast from '../components/CurrentForecast';
 import DayForecast from '../components/DayForecast';
+import BarChart from '../components/BarChart.js';
 
 export class Search extends React.Component{
 
@@ -94,8 +95,14 @@ export class Search extends React.Component{
                         ))
                     }
                   </div>
+                  <div className="row">
+                    <h2>Max Temperature/Day for past 5 days</h2>
+                    {
+                      <BarChart data={this.props.weather.forecast
+                        .map(forecast => forecast.temperatureMax)} size={[500,500]} />
+                    }
+                  </div>
                 </div>
-                // TODO: Add D3 tables here once weather information is being retrieved. Make separate component for this
             }
             <div className="row ">
               <button
