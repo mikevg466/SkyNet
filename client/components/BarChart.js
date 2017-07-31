@@ -11,10 +11,10 @@ class BarChart extends React.Component {
     this.createBarChart = this.createBarChart.bind(this);
   }
   componentDidMount() {
-    this.createBarChart();
+    this.props.data.every(el => typeof el.data === 'number') && this.createBarChart();
   }
   componentDidUpdate() {
-    this.createBarChart();
+    this.props.data.every(el => typeof el.data === 'number') && this.createBarChart();
   }
   createBarChart() {
     const node = this.node;
